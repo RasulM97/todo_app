@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 ThemeData darkTheme = ThemeData.dark().copyWith(
-  textTheme: GoogleFonts.readexProTextTheme(),
+  textTheme: GoogleFonts.readexProTextTheme().copyWith(bodyText1: const TextStyle(fontWeight: FontWeight.w700)),
   useMaterial3: true,
   textSelectionTheme: const TextSelectionThemeData(selectionColor: Color(0xff424A32)),
   colorScheme: const ColorScheme(
@@ -21,7 +21,7 @@ ThemeData darkTheme = ThemeData.dark().copyWith(
 );
 
 ThemeData lightTheme = ThemeData.light().copyWith(
-  textTheme: GoogleFonts.readexProTextTheme(),
+  textTheme: GoogleFonts.readexProTextTheme().copyWith(bodyText1: const TextStyle(fontWeight: FontWeight.w700)),
   useMaterial3: true,
   textSelectionTheme: const TextSelectionThemeData(selectionColor: Color(0xffDDE6C6)),
   colorScheme: const ColorScheme(

@@ -28,28 +28,27 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
         ),
-        //todo: theme doesn't change, fix this later
-        // actions: [
-        //   GetBuilder<ThemeController>(
-        //     builder: (value) => SizedBox(
-        //       width: 55,
-        //       child: ClipRRect(
-        //         borderRadius: BorderRadius.circular(50),
-        //         child: Material(
-        //           color: Colors.transparent,
-        //           child: IconButton(
-        //             onPressed: () {
-        //               value.toggle();
-        //             },
-        //             icon: FaIcon(value.checkTheme()
-        //                 ? FontAwesomeIcons.solidSun
-        //                 : FontAwesomeIcons.solidMoon),
-        //           ),
-        //         ),
-        //       ),
-        //     ),
-        //   ),
-        // ],
+        actions: [
+          GetBuilder<ThemeController>(
+            builder: (value) => SizedBox(
+              width: 55,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(50),
+                child: Material(
+                  color: Colors.transparent,
+                  child: IconButton(
+                    onPressed: () {
+                      value.toggle();
+                    },
+                    icon: FaIcon(value.checkTheme()
+                        ? FontAwesomeIcons.solidSun
+                        : FontAwesomeIcons.solidMoon),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       backgroundColor: Theme.of(context).colorScheme.primary,
       floatingActionButton: FloatingActionButton(

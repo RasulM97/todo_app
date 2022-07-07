@@ -4,10 +4,12 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:todo/bindings/bindings.dart';
 import 'package:todo/constant.dart';
+import 'package:todo/controllers/theme_controller.dart';
 import 'package:todo/routes/routes.dart';
 
 void main() async {
   await GetStorage.init();
+  Get.put(ThemeController());
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
   );
@@ -27,10 +29,8 @@ class MyApp extends StatelessWidget {
       getPages: Routes.pages,
       initialRoute: '/splash',
       theme: lightTheme,
-      //todo: improve theme change
       darkTheme: darkTheme,
-      themeMode: ThemeMode.system,
-          // theme.read('theme') ?? false ? ThemeMode.dark : ThemeMode.light, // todo: fix this later
+      themeMode: Get.find<ThemeController>().checkTheme() ? ThemeMode.dark : ThemeMode.light,
       defaultTransition: Transition.cupertino,
     );
   }
