@@ -113,22 +113,20 @@ class HeaderWidget extends StatelessWidget {
                 child: FittedBox(
                   alignment: Alignment.centerLeft,
                   fit: BoxFit.contain,
-                  child: Flexible(
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                        right: 10.0,
-                        top: Get.width < 360 ? 5.0 : 0.0,
-                        left: context.isLandscape || Get.width < 360? 7.0 : 0.0,
-                      ),
-                      child: Text(
-                        context.isLandscape
-                            ? 'Do Bests, Today Is Yours.'
-                            : 'Do Bests,\nToday Is Yours.',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            // fontSize: 30,
-                            color: Theme.of(context).colorScheme.onPrimary),
-                      ),
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      right: 10.0,
+                      top: Get.width < 360 ? 5.0 : 0.0,
+                      left: context.isLandscape || Get.width < 360? 7.0 : 0.0,
+                    ),
+                    child: Text(
+                      context.isLandscape
+                          ? 'Do Bests, Today Is Yours.'
+                          : 'Do Bests,\nToday Is Yours.',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          // fontSize: 30,
+                          color: Theme.of(context).colorScheme.onPrimary),
                     ),
                   ),
                 ),
