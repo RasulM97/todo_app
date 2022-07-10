@@ -90,10 +90,10 @@ class HeaderWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: context.isLandscape? CrossAxisAlignment.center : CrossAxisAlignment.start,
             children: [
               Expanded(
-                flex: 3,
+                flex: context.isLandscape? 1 : 3,
                 child: Padding(
                   padding: const EdgeInsets.only(left: 20.0),
                   child: Column(
@@ -109,13 +109,28 @@ class HeaderWidget extends StatelessWidget {
                 ),
               ),
               Expanded(
-                flex: 7,
-                child: Text(
-                  'Do Bests,\nToday Is Yours.',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 38,
-                      color: Theme.of(context).colorScheme.onPrimary),
+                flex: context.isLandscape? 9 : 7,
+                child: FittedBox(
+                  alignment: Alignment.centerLeft,
+                  fit: BoxFit.contain,
+                  child: Flexible(
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        right: 10.0,
+                        top: Get.width < 360 ? 5.0 : 0.0,
+                        left: context.isLandscape || Get.width < 360? 7.0 : 0.0,
+                      ),
+                      child: Text(
+                        context.isLandscape
+                            ? 'Do Bests, Today Is Yours.'
+                            : 'Do Bests,\nToday Is Yours.',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            // fontSize: 30,
+                            color: Theme.of(context).colorScheme.onPrimary),
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -126,21 +141,23 @@ class HeaderWidget extends StatelessWidget {
   }
 
   Widget appIcon(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 11.0),
-      child: Container(
-        height: 90,
-        width: 90,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            color: Theme.of(context).colorScheme.background),
-        child: Center(
-          child: Hero(
-            tag: 'AppIcon',
-            child: FaIcon(
-              FontAwesomeIcons.clipboardList,
-              color: Theme.of(context).colorScheme.onPrimary,
-              size: 45,
+    return FittedBox(
+      child: Padding(
+        padding: const EdgeInsets.only(top: 11.0),
+        child: Container(
+          height: 90,
+          width: 90,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: Theme.of(context).colorScheme.background),
+          child: Center(
+            child: Hero(
+              tag: 'AppIcon',
+              child: FaIcon(
+                FontAwesomeIcons.clipboardList,
+                color: Theme.of(context).colorScheme.onPrimary,
+                size: 45,
+              ),
             ),
           ),
         ),
@@ -150,11 +167,13 @@ class HeaderWidget extends StatelessWidget {
 
   Widget countTasks(BuildContext context) {
     return Obx(
-      () => Text(
-        '${Get.find<TaskController>().tasks.length} Tasks',
-        style: TextStyle(
-          fontSize: 14,
-          color: Theme.of(context).colorScheme.onPrimary,
+      () => FittedBox(
+        child: Text(
+          '${Get.find<TaskController>().tasks.length} Tasks',
+          style: TextStyle(
+            fontSize: 14,
+            color: Theme.of(context).colorScheme.onPrimary,
+          ),
         ),
       ),
     );
