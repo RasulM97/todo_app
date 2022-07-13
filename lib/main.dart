@@ -8,8 +8,14 @@ import 'package:todo/controllers/theme_controller.dart';
 import 'package:todo/routes/routes.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
   await GetStorage.init();
   Get.put(ThemeController());
+  // Get.putAsync(() => SplashController());
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
   );
@@ -23,15 +29,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'iDo',
-      initialBinding: AppBindings(),
-      getPages: Routes.pages,
-      initialRoute: '/splash',
-      theme: lightTheme,
-      darkTheme: darkTheme,
-      themeMode: Get.find<ThemeController>().checkTheme() ? ThemeMode.dark : ThemeMode.light,
-      defaultTransition: Transition.cupertino,
-    );
+        debugShowCheckedModeBanner: false,
+        title: 'iDo',
+        initialBinding: AppBindings(),
+        getPages: Routes.pages,
+        initialRoute: '/splash',
+        theme: lightTheme,
+        darkTheme: darkTheme,
+        themeMode: Get.find<ThemeController>().checkTheme() ? ThemeMode.dark : ThemeMode.light,
+        defaultTransition: Transition.cupertino,
+      );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class InfoScreen extends StatelessWidget {
   const InfoScreen({Key? key}) : super(key: key);
@@ -95,13 +96,24 @@ class InfoScreen extends StatelessWidget {
               //     )),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'version : 1.0.0',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 10,
-                      color: Theme.of(context).colorScheme.onPrimary),
-                ),
+                child: FutureBuilder<PackageInfo>(
+                  future: PackageInfo.fromPlatform(),
+                  builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                    switch (snapshot.connectionState){
+                      case ConnectionState.done:
+                        return Text(
+                          snapshot.data!.version,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 10,
+                              color: Theme.of(context).colorScheme.onPrimary),
+                        );
+                      default:
+                        return const CircularProgressIndicator();
+                    }
+                  },
+
+                )
               ),
             ],
           ),

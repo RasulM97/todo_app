@@ -90,10 +90,10 @@ class HeaderWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Row(
-            crossAxisAlignment: context.isLandscape? CrossAxisAlignment.center : CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
-                flex: context.isLandscape? 1 : 3,
+                flex: context.isLandscape ? 1 : 3,
                 child: Padding(
                   padding: const EdgeInsets.only(left: 20.0),
                   child: Column(
@@ -109,7 +109,7 @@ class HeaderWidget extends StatelessWidget {
                 ),
               ),
               Expanded(
-                flex: context.isLandscape? 9 : 7,
+                flex: context.isLandscape ? 9 : 7,
                 child: FittedBox(
                   alignment: Alignment.centerLeft,
                   fit: BoxFit.contain,
@@ -117,16 +117,19 @@ class HeaderWidget extends StatelessWidget {
                     padding: EdgeInsets.only(
                       right: 10.0,
                       top: Get.width < 360 ? 5.0 : 0.0,
-                      left: context.isLandscape || Get.width < 360? 7.0 : 0.0,
+                      left: context.isLandscape || Get.width < 360 ? 7.0 : 0.0,
                     ),
-                    child: Text(
-                      context.isLandscape
-                          ? 'Do Bests, Today Is Yours.'
-                          : 'Do Bests,\nToday Is Yours.',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          // fontSize: 30,
-                          color: Theme.of(context).colorScheme.onPrimary),
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: Text(
+                        context.isLandscape
+                            ? 'Do Bests, Today Is Yours.'
+                            : 'Do Bests,\nToday Is Yours.',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            // fontSize: 30,
+                            color: Theme.of(context).colorScheme.onPrimary),
+                      ),
                     ),
                   ),
                 ),
@@ -331,6 +334,9 @@ class WidgetHandle {
           style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
         ),
         onPressed: () {
+          if (Get.isSnackbarOpen) {
+            Get.closeAllSnackbars();
+          }
           task.removeAt(index);
           Get.back();
           snackBar();

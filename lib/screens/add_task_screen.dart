@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -51,7 +50,7 @@ class AddTaskScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
+                    padding: const EdgeInsets.only(bottom: 15.0),
                     child: Text(
                       'What is your plan today?',
                       style: TextStyle(
@@ -84,6 +83,7 @@ class TitleInputText extends StatelessWidget {
         showCursor: true,
         cursorRadius: const Radius.circular(50),
         cursorColor: Theme.of(context).colorScheme.onPrimary,
+        cursorWidth: 2.5,
         autofocus: true,
         controller: Get.find<TextFieldController>().taskTitle,
         style: TextStyle(
@@ -93,7 +93,7 @@ class TitleInputText extends StatelessWidget {
             filled: true,
             fillColor: Theme.of(context).colorScheme.surface,
             prefixIcon: Icon(
-              CupertinoIcons.paperclip,
+              FontAwesomeIcons.message,
               color: Theme.of(context).colorScheme.onSecondary,
             ),
             labelText: 'Title',
@@ -131,20 +131,25 @@ class NoteInputText extends StatelessWidget {
         cursorColor: Theme.of(context).colorScheme.onPrimary,
         cursorWidth: 2.5,
         minLines: 1,
-        maxLines: 5,
+        maxLines: 10,
         style: TextStyle(
             fontWeight: FontWeight.bold,
             color: Theme.of(context).colorScheme.onSecondary),
         controller: Get.find<TextFieldController>().taskNote,
         decoration: InputDecoration(
+          filled: true,
+          fillColor: Theme.of(context).colorScheme.onSecondary.withOpacity(.1),
           prefixIcon: Icon(
-            CupertinoIcons.bookmark,
+            FontAwesomeIcons.comment,
             color: Theme.of(context).colorScheme.onSurface,
           ),
           labelText: 'Note',
           labelStyle:
               TextStyle(color: Theme.of(context).colorScheme.onSecondary),
-          border: InputBorder.none,
+          border: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+            borderSide: BorderSide.none,
+              ),
         ),
       ),
     );
@@ -175,9 +180,9 @@ class AddButtonWidget extends StatelessWidget {
               foregroundColor: MaterialStateProperty.all<Color>(
                   Theme.of(context).colorScheme.onSurface)),
           onPressed: () {
-            if (Get.find<TextFieldController>().taskTitle!.text == '' ||
-                Get.find<TextFieldController>().taskNote!.text == '') {
+            if (Get.find<TextFieldController>().taskTitle!.text == '') {
               emptyFields(context);
+              return;
             } else if (Get.find<TaskController>().isEditing) {
               editingTask();
             } else {
@@ -207,7 +212,7 @@ class AddButtonWidget extends StatelessWidget {
           ),
         ),
         messageText: Text(
-          'None of each Field can be empty you have to full all fields.',
+          'Title field can\'t be empty you have to write something.',
           style: TextStyle(
             color: Theme.of(context).colorScheme.onError,
           ),
@@ -221,28 +226,36 @@ class AddButtonWidget extends StatelessWidget {
   }
 
   void editingTask() {
-    var editTask =
-        Get.find<TaskController>().tasks[Get.find<TaskController>().index];
+    if(Get.isSnackbarOpen){
+      return;
+    }else {
+      var editTask =
+          Get.find<TaskController>().tasks[Get.find<TaskController>().index];
 
-    editTask.title = Get.find<TextFieldController>().taskTitle!.text;
-    editTask.note = Get.find<TextFieldController>().taskNote!.text;
-    editTask.done = false;
-    Get.find<TaskController>().tasks[Get.find<TaskController>().index] =
-        editTask;
-    Get.find<TaskController>().isEditing = false;
-    Get.back();
+      editTask.title = Get.find<TextFieldController>().taskTitle!.text;
+      editTask.note = Get.find<TextFieldController>().taskNote!.text;
+      editTask.done = false;
+      Get.find<TaskController>().tasks[Get.find<TaskController>().index] =
+          editTask;
+      Get.find<TaskController>().isEditing = false;
+      Get.back();
+    }
   }
 
   void addingTask() {
-    Get.find<TaskController>().tasks.add(
-          TaskModel(
-            title: Get.find<TextFieldController>().taskTitle!.text,
-            note: Get.find<TextFieldController>().taskNote!.text,
-          ),
-        );
-    Get.find<TextFieldController>().taskTitle!.text = '';
-    Get.find<TextFieldController>().taskNote!.text = '';
-    Get.back();
+    if(Get.isSnackbarOpen){
+      return;
+    }else{
+      Get.find<TaskController>().tasks.add(
+        TaskModel(
+          title: Get.find<TextFieldController>().taskTitle!.text,
+          note: Get.find<TextFieldController>().taskNote!.text,
+        ),
+      );
+      Get.find<TextFieldController>().taskTitle!.text = '';
+      Get.find<TextFieldController>().taskNote!.text = '';
+      Get.back();
+    }
   }
 
   Widget changeButtonMode() {
