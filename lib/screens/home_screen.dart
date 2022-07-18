@@ -1,3 +1,4 @@
+import 'package:figma_squircle/figma_squircle.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -10,6 +11,27 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var items = [
+      'Blue',
+      'Green',
+      'Purple',
+      'Orange',
+      'Pink',
+    ];
+    var lightColor = const [
+      Color(0xff76D1FF),
+      Color(0xffC5F173),
+      Color(0xffE2DFFF),
+      Color(0xffFFBA4A),
+      Color(0xffFFD8E8),
+    ];
+    var darkColor = const [
+      Color(0xff004D67),
+      Color(0xff364E00),
+      Color(0xff3F3C8F),
+      Color(0xff624000),
+      Color(0xff782956),
+    ];
     return Scaffold(
       appBar: AppBar(
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
@@ -17,8 +39,11 @@ class HomeScreen extends StatelessWidget {
         elevation: 0,
         leading: Hero(
           tag: 'about',
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(50),
+          child: ClipSmoothRect(
+            radius: SmoothBorderRadius(
+              cornerRadius: 20,
+              cornerSmoothing: .5,
+            ),
             child: Material(
               color: Colors.transparent,
               child: IconButton(
@@ -29,18 +54,116 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
         actions: [
-          GetBuilder<ThemeController>(
+          GetBuilder<ThemeModeController>(
             builder: (value) => SizedBox(
               width: 55,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(50),
+              child: ClipSmoothRect(
+                radius: SmoothBorderRadius(
+                  cornerRadius: 20,
+                  cornerSmoothing: .5,
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: IconButton(
+                    onPressed: () {
+                      Get.bottomSheet(
+                          enterBottomSheetDuration:
+                              const Duration(milliseconds: 150),
+                          exitBottomSheetDuration:
+                              const Duration(milliseconds: 150),
+                          ClipRRect(
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(20),
+                              topRight: Radius.circular(20),
+                            ),
+                            child: Container(
+                              color: Theme.of(context).colorScheme.background,
+                              child: ListView.separated(
+                                separatorBuilder: (context, index) => const Divider(
+                                  height: 2,
+                                  indent: 30,
+                                  endIndent: 30,
+                                ),
+                                itemCount: items.length,
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
+                                    child: TextButton(
+                                      style: ButtonStyle(
+                                          shape: MaterialStateProperty.all<SmoothRectangleBorder>(
+                                            SmoothRectangleBorder(
+                                              borderRadius: SmoothBorderRadius(
+                                                cornerRadius: 12,
+                                                cornerSmoothing: 1,
+                                              ),
+                                            ),
+                                          ),
+                                          backgroundColor:
+                                              MaterialStateProperty.all<Color>(
+                                                  Theme.of(context)
+                                                      .colorScheme
+                                                      .surface),
+                                          foregroundColor:
+                                              MaterialStateProperty.all<Color>(
+                                                  Theme.of(context)
+                                                      .colorScheme
+                                                      .onSurface)),
+                                      child: Padding(
+                                          padding: const EdgeInsets.all(15.0),
+                                          child: Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Row(
+                                                children: [
+                                                  Container(
+                                                    height: 25,
+                                                    width: 25,
+                                                    decoration: ShapeDecoration(
+                                                      color: Get.isDarkMode ? lightColor[index] : darkColor[index],
+                                                      shape: SmoothRectangleBorder(
+                                                        borderRadius: SmoothBorderRadius(
+                                                          cornerRadius: 8,
+                                                          cornerSmoothing: 0.5,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(width: 10,),
+                                                  Text(items[index]),
+                                                ],
+                                              ),)),
+                                      onPressed: () {
+                                        value.colorSelected(items[index]);
+                                        Get.back();
+                                      },
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ));
+                    },
+                    icon: const FaIcon(FontAwesomeIcons.paintbrush),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          GetBuilder<ThemeModeController>(
+            builder: (value) => SizedBox(
+              width: 55,
+              child: ClipSmoothRect(
+                radius: SmoothBorderRadius(
+                  cornerRadius: 20,
+                  cornerSmoothing: .5,
+                ),
                 child: Material(
                   color: Colors.transparent,
                   child: IconButton(
                     onPressed: () {
                       value.toggle();
                     },
-                    icon: FaIcon(value.checkTheme()
+                    icon: FaIcon(value.checkThemeMode()
                         ? FontAwesomeIcons.solidSun
                         : FontAwesomeIcons.solidMoon),
                   ),
@@ -52,6 +175,12 @@ class HomeScreen extends StatelessWidget {
       ),
       backgroundColor: Theme.of(context).colorScheme.primary,
       floatingActionButton: FloatingActionButton(
+        shape: SmoothRectangleBorder(
+          borderRadius: SmoothBorderRadius(
+            cornerRadius: 20,
+            cornerSmoothing: 1,
+          ),
+        ),
         heroTag: 'add',
         onPressed: () {
           Get.closeAllSnackbars();
@@ -148,9 +277,15 @@ class HeaderWidget extends StatelessWidget {
         child: Container(
           height: 90,
           width: 90,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              color: Theme.of(context).colorScheme.background),
+          decoration: ShapeDecoration(
+            color: Theme.of(context).colorScheme.background,
+            shape: SmoothRectangleBorder(
+              borderRadius: SmoothBorderRadius(
+                cornerRadius: 20,
+                cornerSmoothing: 1,
+              ),
+            ),
+          ),
           child: Center(
             child: Hero(
               tag: 'AppIcon',
@@ -189,10 +324,16 @@ class TaskItems extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var task = Get.find<TaskController>().tasks;
-    return ClipRRect(
-      borderRadius: const BorderRadius.only(
-        topLeft: Radius.circular(20),
-        topRight: Radius.circular(20),
+    return ClipSmoothRect(
+      radius: const SmoothBorderRadius.only(
+        topLeft: SmoothRadius(
+          cornerSmoothing: .5,
+          cornerRadius: 30,
+        ),
+        topRight: SmoothRadius(
+          cornerSmoothing: .5,
+          cornerRadius: 30,
+        ),
       ),
       child: Container(
         color: Theme.of(context).colorScheme.background,
@@ -200,28 +341,71 @@ class TaskItems extends StatelessWidget {
           radius: const Radius.circular(50),
           trackVisibility: true,
           child: Obx(
-            () => ListView.separated(
-              padding: const EdgeInsets.only(bottom: 80),
-              itemBuilder: (context, index) {
-                var remove = task[index];
-                return WidgetHandle(
-                        context: context,
-                        task: task,
-                        index: index,
-                        remove: remove)
-                    .swipeToDismiss();
-              },
-              separatorBuilder: (context, index) => const Divider(
-                indent: 20,
-                endIndent: 20,
-              ),
-              itemCount: task.length,
-            ),
+            () => task.isNotEmpty
+                ? ListView.separated(
+                    padding: const EdgeInsets.only(bottom: 80, top: 10.0),
+                    itemBuilder: (context, index) {
+                      var remove = task[index];
+                      return WidgetHandle(
+                              context: context,
+                              task: task,
+                              index: index,
+                              remove: remove)
+                          .swipeToDismiss();
+                    },
+                    separatorBuilder: (context, index) => const Divider(
+                      indent: 20,
+                      endIndent: 20,
+                    ),
+                    itemCount: task.length,
+                  )
+                : empty(context),
           ),
         ),
       ),
     );
   }
+}
+
+Widget empty(BuildContext context) {
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: [
+      const SizedBox(
+        width: double.infinity,
+      ),
+      SizedBox(
+        height: 55,
+        width: 55,
+        child: DecoratedBox(
+          decoration: ShapeDecoration(
+            color: Theme.of(context).colorScheme.onSecondary.withOpacity(.1),
+            shape: SmoothRectangleBorder(
+              borderRadius: SmoothBorderRadius(
+                cornerRadius: 15,
+                cornerSmoothing: 1,
+              ),
+            ),
+          ),
+          child: Center(
+              child: FaIcon(FontAwesomeIcons.faceSmile,
+                  color: Theme.of(context).colorScheme.onPrimary)),
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Text(
+          'Nothing to show',
+          style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+        ),
+      ),
+      Text(
+        'Add new task with + button',
+        style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+      ),
+    ],
+  );
 }
 
 class WidgetHandle {
@@ -237,82 +421,129 @@ class WidgetHandle {
       this.remove});
 
   Widget swipeToDismiss() {
-    return Dismissible(
-      direction: DismissDirection.startToEnd,
-      background: Container(
-        color: Theme.of(context).colorScheme.error,
-        child: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Row(
-            children: [
-              Icon(Icons.delete, color: Theme.of(context).colorScheme.onError),
-              Text('Delete',
-                  style:
-                      TextStyle(color: Theme.of(context).colorScheme.onError)),
-            ],
-          ),
-        ),
+    return ClipSmoothRect(
+      radius: SmoothBorderRadius(
+        cornerRadius: 10,
+        cornerSmoothing: 1,
       ),
-      onDismissed: (value) {
-        if (Get.isSnackbarOpen) {
-          Get.closeAllSnackbars();
-          task.removeAt(index);
-          task.insert(index, remove);
-        }
-        showMessageDialog();
-      },
-      key: UniqueKey(),
-      child: ListTile(
-        title: Text(
-          task[index].title ?? '',
-          style: TextStyle(
-            decoration: task[index].done!
-                ? TextDecoration.lineThrough
-                : TextDecoration.none,
-            decorationThickness: 2.5,
-            decorationColor: Theme.of(context).colorScheme.onPrimary,
-            color: Theme.of(context).colorScheme.onBackground,
-          ),
-        ),
-        subtitle: Text(
-          task[index].note ?? '',
-          style: TextStyle(
-            decoration: task[index].done!
-                ? TextDecoration.lineThrough
-                : TextDecoration.none,
-            decorationThickness: 2.5,
-            decorationColor:
-                Theme.of(context).colorScheme.onPrimary.withOpacity(0.5),
-            color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7),
-          ),
-        ),
-        trailing: Wrap(
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(50),
-              child: Material(
-                color: Colors.transparent,
-                child: IconButton(
-                  onPressed: () => editTask(),
-                  icon: FaIcon(
-                    FontAwesomeIcons.penToSquare,
-                    size: 20,
-                    color: Theme.of(context).colorScheme.onBackground,
-                  ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        child: Dismissible(
+          direction: DismissDirection.startToEnd,
+          background: Container(
+            decoration: ShapeDecoration(
+              color: Theme.of(context).colorScheme.error,
+              shape: SmoothRectangleBorder(
+                borderRadius: SmoothBorderRadius(
+                  cornerRadius: 12,
+                  cornerSmoothing: 0.5,
                 ),
               ),
             ),
-            Checkbox(
-              checkColor: Theme.of(context).colorScheme.primary,
-              activeColor: Theme.of(context).colorScheme.onPrimary,
-              value: task[index].done,
-              onChanged: (value) {
-                task[index].done = !task[index].done!;
-                Get.find<TaskController>().tasks[index] = task[index];
-              },
+            child: Padding(
+              padding: const EdgeInsets.all(15),
+              child: Row(
+                children: [
+                  Icon(Icons.delete, color: Theme.of(context).colorScheme.onError),
+                  Text('Delete',
+                      style:
+                          TextStyle(color: Theme.of(context).colorScheme.onError)),
+                ],
+              ),
             ),
-          ],
+          ),
+          onDismissed: (value) {
+            if (Get.isSnackbarOpen) {
+              Get.closeAllSnackbars();
+              task.removeAt(index);
+              task.insert(index, remove);
+            }
+            showMessageDialog();
+          },
+          key: UniqueKey(),
+          child: ClipSmoothRect(
+            radius: SmoothBorderRadius(
+              cornerRadius: 10,
+              cornerSmoothing: 1,
+            ),
+            child: Container(
+              decoration: ShapeDecoration(
+                color: Theme.of(context).colorScheme.onBackground.withOpacity(.06),
+                shape: SmoothRectangleBorder(
+                  borderRadius: SmoothBorderRadius(
+                    cornerRadius: 12,
+                    cornerSmoothing: 0.5,
+                  ),
+                ),
+              ),
+              child: ListTile(
+                shape: SmoothRectangleBorder(
+                  borderRadius: SmoothBorderRadius(
+                    cornerRadius: 12,
+                    cornerSmoothing: 0.5,
+                  ),
+                ) ,
+                title: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Text(
+                    task[index].title ?? '',
+                    style: TextStyle(
+                      decoration: task[index].done!
+                          ? TextDecoration.lineThrough
+                          : TextDecoration.none,
+                      decorationThickness: 2.5,
+                      decorationColor: Theme.of(context).colorScheme.onPrimary,
+                      color: Theme.of(context).colorScheme.onBackground,
+                    ),
+                  ),
+                ),
+                subtitle: Text(
+                  task[index].note ?? '',
+                  style: TextStyle(
+                    decoration: task[index].done!
+                        ? TextDecoration.lineThrough
+                        : TextDecoration.none,
+                    decorationThickness: 2.5,
+                    decorationColor:
+                        Theme.of(context).colorScheme.onPrimary.withOpacity(0.5),
+                    color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7),
+                  ),
+                ),
+                trailing: Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    ClipSmoothRect(
+                      radius: SmoothBorderRadius(
+                        cornerRadius: 10,
+                        cornerSmoothing: .5,
+                      ),
+                      child: Material(
+                        color: Colors.transparent,
+                        child: IconButton(
+                          onPressed: () => editTask(),
+                          icon: FaIcon(
+                            FontAwesomeIcons.penToSquare,
+                            size: 20,
+                            color: Theme.of(context).colorScheme.onBackground,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Checkbox(
+                      splashRadius: 18,
+                      checkColor: Theme.of(context).colorScheme.primary,
+                      activeColor: Theme.of(context).colorScheme.onPrimary,
+                      value: task[index].done,
+                      onChanged: (value) {
+                        task[index].done = !task[index].done!;
+                        Get.find<TaskController>().tasks[index] = task[index];
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ),
       ),
     );

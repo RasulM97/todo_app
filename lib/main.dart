@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:todo/bindings/bindings.dart';
-import 'package:todo/constant.dart';
 import 'package:todo/controllers/theme_controller.dart';
 import 'package:todo/routes/routes.dart';
 
@@ -14,8 +13,8 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
   await GetStorage.init();
-  Get.put(ThemeController());
-  // Get.putAsync(() => SplashController());
+  Get.put(ThemeModeController());
+
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
   );
@@ -28,16 +27,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'iDo',
-        initialBinding: AppBindings(),
-        getPages: Routes.pages,
-        initialRoute: '/splash',
-        theme: lightTheme,
-        darkTheme: darkTheme,
-        themeMode: Get.find<ThemeController>().checkTheme() ? ThemeMode.dark : ThemeMode.light,
-        defaultTransition: Transition.cupertino,
-      );
+    return GetBuilder<ThemeModeController>(
+      builder: (controller) {
+        return GetMaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'iDo',
+          initialBinding: AppBindings(),
+          getPages: Routes.pages,
+          initialRoute: '/splash',
+          theme: controller.loadLight(controller.light()),
+          darkTheme: controller.loadDark(controller.dark()),
+          themeMode: controller.checkThemeMode()
+              ? ThemeMode.dark
+              : ThemeMode.light,
+          defaultTransition: Transition.cupertino,
+        );
+      }
+    );
   }
 }

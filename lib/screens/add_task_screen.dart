@@ -1,3 +1,4 @@
+import 'package:figma_squircle/figma_squircle.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -100,7 +101,10 @@ class TitleInputText extends StatelessWidget {
             labelStyle:
                 TextStyle(color: Theme.of(context).colorScheme.onSecondary),
             focusedBorder: OutlineInputBorder(
-                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                borderRadius: SmoothBorderRadius(
+                  cornerRadius: 15,
+                  cornerSmoothing: 1,
+                ),
                 borderSide: BorderSide(
                     width: 2,
                     color: Theme.of(context)
@@ -108,7 +112,10 @@ class TitleInputText extends StatelessWidget {
                         .onSurface
                         .withOpacity(.3))),
             border: OutlineInputBorder(
-                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                borderRadius: SmoothBorderRadius(
+                  cornerRadius: 15,
+                  cornerSmoothing: 1,
+                ),
                 borderSide: BorderSide(
                     width: 2, color: Theme.of(context).colorScheme.onSurface))),
       ),
@@ -146,10 +153,13 @@ class NoteInputText extends StatelessWidget {
           labelText: 'Note',
           labelStyle:
               TextStyle(color: Theme.of(context).colorScheme.onSecondary),
-          border: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
+          border: OutlineInputBorder(
+            borderRadius: SmoothBorderRadius(
+              cornerRadius: 15,
+              cornerSmoothing: 1,
+            ),
             borderSide: BorderSide.none,
-              ),
+          ),
         ),
       ),
     );
@@ -170,9 +180,12 @@ class AddButtonWidget extends StatelessWidget {
         tag: 'add',
         child: ElevatedButton(
           style: ButtonStyle(
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
+              shape: MaterialStateProperty.all<SmoothRectangleBorder>(
+                SmoothRectangleBorder(
+                  borderRadius: SmoothBorderRadius(
+                    cornerRadius: 12,
+                    cornerSmoothing: 1,
+                  ),
                 ),
               ),
               backgroundColor: MaterialStateProperty.all<Color>(
@@ -226,9 +239,9 @@ class AddButtonWidget extends StatelessWidget {
   }
 
   void editingTask() {
-    if(Get.isSnackbarOpen){
+    if (Get.isSnackbarOpen) {
       return;
-    }else {
+    } else {
       var editTask =
           Get.find<TaskController>().tasks[Get.find<TaskController>().index];
 
@@ -243,15 +256,15 @@ class AddButtonWidget extends StatelessWidget {
   }
 
   void addingTask() {
-    if(Get.isSnackbarOpen){
+    if (Get.isSnackbarOpen) {
       return;
-    }else{
+    } else {
       Get.find<TaskController>().tasks.add(
-        TaskModel(
-          title: Get.find<TextFieldController>().taskTitle!.text,
-          note: Get.find<TextFieldController>().taskNote!.text,
-        ),
-      );
+            TaskModel(
+              title: Get.find<TextFieldController>().taskTitle!.text,
+              note: Get.find<TextFieldController>().taskNote!.text,
+            ),
+          );
       Get.find<TextFieldController>().taskTitle!.text = '';
       Get.find<TextFieldController>().taskNote!.text = '';
       Get.back();
