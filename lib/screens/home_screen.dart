@@ -5,33 +5,13 @@ import 'package:get/get.dart';
 import 'package:todo/controllers/task_controller.dart';
 import 'package:todo/controllers/text_field_controller.dart';
 import 'package:todo/controllers/theme_controller.dart';
+import 'package:todo/models/colors_palette.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var items = [
-      'Blue',
-      'Green',
-      'Purple',
-      'Orange',
-      'Pink',
-    ];
-    var lightColor = const [
-      Color(0xff76D1FF),
-      Color(0xffC5F173),
-      Color(0xffE2DFFF),
-      Color(0xffFFBA4A),
-      Color(0xffFFD8E8),
-    ];
-    var darkColor = const [
-      Color(0xff004D67),
-      Color(0xff364E00),
-      Color(0xff3F3C8F),
-      Color(0xff624000),
-      Color(0xff782956),
-    ];
     return Scaffold(
       appBar: AppBar(
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
@@ -55,98 +35,9 @@ class HomeScreen extends StatelessWidget {
         ),
         actions: [
           GetBuilder<ThemeModeController>(
-            builder: (value) => SizedBox(
-              width: 55,
-              child: ClipSmoothRect(
-                radius: SmoothBorderRadius(
-                  cornerRadius: 20,
-                  cornerSmoothing: .5,
-                ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: IconButton(
-                    onPressed: () {
-                      Get.bottomSheet(
-                          enterBottomSheetDuration:
-                              const Duration(milliseconds: 150),
-                          exitBottomSheetDuration:
-                              const Duration(milliseconds: 150),
-                          ClipRRect(
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(20),
-                              topRight: Radius.circular(20),
-                            ),
-                            child: Container(
-                              color: Theme.of(context).colorScheme.background,
-                              child: ListView.separated(
-                                separatorBuilder: (context, index) => const Divider(
-                                  height: 2,
-                                  indent: 30,
-                                  endIndent: 30,
-                                ),
-                                itemCount: items.length,
-                                shrinkWrap: true,
-                                itemBuilder: (context, index) {
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
-                                    child: TextButton(
-                                      style: ButtonStyle(
-                                          shape: MaterialStateProperty.all<SmoothRectangleBorder>(
-                                            SmoothRectangleBorder(
-                                              borderRadius: SmoothBorderRadius(
-                                                cornerRadius: 12,
-                                                cornerSmoothing: 1,
-                                              ),
-                                            ),
-                                          ),
-                                          backgroundColor:
-                                              MaterialStateProperty.all<Color>(
-                                                  Theme.of(context)
-                                                      .colorScheme
-                                                      .surface),
-                                          foregroundColor:
-                                              MaterialStateProperty.all<Color>(
-                                                  Theme.of(context)
-                                                      .colorScheme
-                                                      .onSurface)),
-                                      child: Padding(
-                                          padding: const EdgeInsets.all(15.0),
-                                          child: Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: Row(
-                                                children: [
-                                                  Container(
-                                                    height: 25,
-                                                    width: 25,
-                                                    decoration: ShapeDecoration(
-                                                      color: Get.isDarkMode ? lightColor[index] : darkColor[index],
-                                                      shape: SmoothRectangleBorder(
-                                                        borderRadius: SmoothBorderRadius(
-                                                          cornerRadius: 8,
-                                                          cornerSmoothing: 0.5,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  const SizedBox(width: 10,),
-                                                  Text(items[index]),
-                                                ],
-                                              ),)),
-                                      onPressed: () {
-                                        value.colorSelected(items[index]);
-                                        Get.back();
-                                      },
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ));
-                    },
-                    icon: const FaIcon(FontAwesomeIcons.paintbrush),
-                  ),
-                ),
-              ),
+            builder: (value) => PaintTheme(
+              items: ColorPalette.myColor,
+              value: value,
             ),
           ),
           GetBuilder<ThemeModeController>(
@@ -203,6 +94,116 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       )),
+    );
+  }
+}
+
+class PaintTheme extends StatelessWidget {
+  const PaintTheme({
+    Key? key,
+    required this.items,
+    required this.value,
+  }) : super(key: key);
+
+  final List<ColorPalette> items;
+  final value;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 55,
+      child: ClipSmoothRect(
+        radius: SmoothBorderRadius(
+          cornerRadius: 20,
+          cornerSmoothing: .5,
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: IconButton(
+            onPressed: () {
+              Get.bottomSheet(
+                  enterBottomSheetDuration: const Duration(milliseconds: 150),
+                  exitBottomSheetDuration: const Duration(milliseconds: 150),
+                  ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
+                    ),
+                    child: Container(
+                      color: Theme.of(context).colorScheme.background,
+                      child: ListView.separated(
+                        separatorBuilder: (context, index) => const Divider(
+                          height: 2,
+                          indent: 30,
+                          endIndent: 30,
+                        ),
+                        itemCount: items.length,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8.0, vertical: 1.0),
+                            child: TextButton(
+                              style: ButtonStyle(
+                                  shape: MaterialStateProperty.all<
+                                      SmoothRectangleBorder>(
+                                    SmoothRectangleBorder(
+                                      borderRadius: SmoothBorderRadius(
+                                        cornerRadius: 12,
+                                        cornerSmoothing: 1,
+                                      ),
+                                    ),
+                                  ),
+                                  backgroundColor: MaterialStateProperty.all<
+                                          Color>(
+                                      Theme.of(context).colorScheme.surface),
+                                  foregroundColor: MaterialStateProperty.all<
+                                          Color>(
+                                      Theme.of(context).colorScheme.onSurface)),
+                              child: Padding(
+                                  padding: const EdgeInsets.all(15.0),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          height: 25,
+                                          width: 25,
+                                          decoration: ShapeDecoration(
+                                            color: Get.isDarkMode
+                                                ? items[index].colorLight
+                                                : items[index].colorDark,
+                                            shape: SmoothRectangleBorder(
+                                              borderRadius: SmoothBorderRadius(
+                                                cornerRadius: 8,
+                                                cornerSmoothing: 0.5,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text(items[index].name.toString()),
+                                      ],
+                                    ),
+                                  )),
+                              onPressed: () {
+                                value.colorSelected(
+                                    items[index].name.toString());
+                                Get.back();
+                              },
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ));
+            },
+            icon: const FaIcon(FontAwesomeIcons.paintbrush),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -444,10 +445,11 @@ class WidgetHandle {
               padding: const EdgeInsets.all(15),
               child: Row(
                 children: [
-                  Icon(Icons.delete, color: Theme.of(context).colorScheme.onError),
+                  Icon(Icons.delete,
+                      color: Theme.of(context).colorScheme.onError),
                   Text('Delete',
-                      style:
-                          TextStyle(color: Theme.of(context).colorScheme.onError)),
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.onError)),
                 ],
               ),
             ),
@@ -468,7 +470,8 @@ class WidgetHandle {
             ),
             child: Container(
               decoration: ShapeDecoration(
-                color: Theme.of(context).colorScheme.onBackground.withOpacity(.06),
+                color:
+                    Theme.of(context).colorScheme.onBackground.withOpacity(.06),
                 shape: SmoothRectangleBorder(
                   borderRadius: SmoothBorderRadius(
                     cornerRadius: 12,
@@ -482,7 +485,7 @@ class WidgetHandle {
                     cornerRadius: 12,
                     cornerSmoothing: 0.5,
                   ),
-                ) ,
+                ),
                 title: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Text(
@@ -504,9 +507,14 @@ class WidgetHandle {
                         ? TextDecoration.lineThrough
                         : TextDecoration.none,
                     decorationThickness: 2.5,
-                    decorationColor:
-                        Theme.of(context).colorScheme.onPrimary.withOpacity(0.5),
-                    color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7),
+                    decorationColor: Theme.of(context)
+                        .colorScheme
+                        .onPrimary
+                        .withOpacity(0.5),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onBackground
+                        .withOpacity(0.7),
                   ),
                 ),
                 trailing: Wrap(
